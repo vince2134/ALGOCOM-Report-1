@@ -39,20 +39,19 @@ public class Main {
                 //JOptionPane.showMessageDialog(null, inputSizeComboBox.getSelectedItem().toString());
                 try {
                     run();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Invalid input found.");
                 }
             }
         });
     }
 
-    int randomWithRange(int min, int max){
+    int randomWithRange(int min, int max) {
         int range = (max - min) + 1;
-        return (int)(Math.random() * range) + min;
+        return (int) (Math.random() * range) + min;
     }
 
-    public void run(){
+    public void run() {
         bestTime = null;
         averageTime = null;
         worstTime = null;
@@ -61,83 +60,79 @@ public class Main {
         ArrayList<Integer> currentInput = new ArrayList<>();
 
         //INITIALIZE INPUT ARRAY BASED ON INPUT SIZE
-        for(int i = 1; i <= Integer.parseInt(inputSizeComboBox.getSelectedItem().toString()); i++){
+        for (int i = 1; i <= Integer.parseInt(inputSizeComboBox.getSelectedItem().toString()); i++) {
             currentInput.add(i);
         }
 
-        for(int j = 1; j <= Integer.parseInt(executionTimesTextField.getText().toString()); j++) {
+        for (int j = 1; j <= Integer.parseInt(executionTimesTextField.getText().toString()); j++) {
             found = false;
 
-
-                if (caseComboBox.getSelectedItem().toString().equals("BEST CASE")) {
-                    if(searchTypeComboBox.getSelectedItem().toString().equals("Linear"))
-                        searchValue = 1;
-                    else
-                        searchValue = currentInput.get((currentInput.size() - 1) / 2);
-                }
-                else if (caseComboBox.getSelectedItem().toString().equals("AVERAGE CASE")) {
-                    if (j < Integer.parseInt(executionTimesTextField.getText().toString()) / 2)
-                        searchValue = randomWithRange(1, currentInput.size());
-                    else
-                        searchValue = -1;
-                } else
+            if (caseComboBox.getSelectedItem().toString().equals("BEST CASE")) {
+                if (searchTypeComboBox.getSelectedItem().toString().equals("Linear"))
+                    searchValue = 1;
+                else
+                    searchValue = currentInput.get((currentInput.size() - 1) / 2);
+            } else if (caseComboBox.getSelectedItem().toString().equals("AVERAGE CASE")) {
+                if (j < Integer.parseInt(executionTimesTextField.getText().toString()) / 2)
+                    searchValue = randomWithRange(1, currentInput.size());
+                else
                     searchValue = -1;
+            } else
+                searchValue = -1;
 
-                long startTime, endTime;
+            long startTime, endTime;
 
-                if(searchTypeComboBox.getSelectedItem().toString().equals("Linear")) {
-                    startTime = System.nanoTime();
-                    for (int i = 0; !found && i < currentInput.size(); i++) {
-                        if (currentInput.get(i) == searchValue)
-                            found = true;
-                    }
-                    endTime = System.nanoTime();
+            if (searchTypeComboBox.getSelectedItem().toString().equals("Linear")) {
+                startTime = System.nanoTime();
+                for (int i = 0; !found && i < currentInput.size(); i++) {
+                    if (currentInput.get(i) == searchValue)
+                        found = true;
                 }
-                else{
-                    startTime = System.nanoTime();
+                endTime = System.nanoTime();
+            } else {
+                startTime = System.nanoTime();
 
-                    int low = 0, high = currentInput.size() -1;
+                int low = 0, high = currentInput.size() - 1;
 
-                    while(low <= high && !found){
-                        int mid = low + (high - low) / 2;
-                        if(searchValue < currentInput.get(mid))
-                            high = mid - 1;
-                        else if(searchValue > currentInput.get(mid))
-                            low = mid + 1;
-                        else
-                            found = true;
-                    }
-
-                    endTime = System.nanoTime();
+                while (low <= high && !found) {
+                    int mid = low + (high - low) / 2;
+                    if (searchValue < currentInput.get(mid))
+                        high = mid - 1;
+                    else if (searchValue > currentInput.get(mid))
+                        low = mid + 1;
+                    else
+                        found = true;
                 }
 
-                long duration = endTime - startTime;
+                endTime = System.nanoTime();
+            }
 
-                if(bestTime == null)
-                    bestTime = duration;
-                else if(duration < bestTime && duration != 0)
-                    bestTime = duration;
+            long duration = endTime - startTime;
 
-                if(averageTime == null)
-                    averageTime = duration;
-                else {
-                    averageTime = averageTime + duration;
-                }
+            if (bestTime == null)
+                bestTime = duration;
+            else if (duration < bestTime && duration != 0)
+                bestTime = duration;
 
-                if(worstTime == null)
-                    worstTime = duration;
-                else if(duration > worstTime)
-                    worstTime = duration;
+            if (averageTime == null)
+                averageTime = duration;
+            else {
+                averageTime = averageTime + duration;
+            }
+
+            if (worstTime == null)
+                worstTime = duration;
+            else if (duration > worstTime)
+                worstTime = duration;
         }
 
         averageTime = averageTime / Integer.parseInt(executionTimesTextField.getText().toString());
 
-        if(searchTypeComboBox.getSelectedItem().toString().equals("Linear")) {
+        if (searchTypeComboBox.getSelectedItem().toString().equals("Linear")) {
             bestLinearTimeValueLabel.setText(bestTime.toString());
             averageLinearTimeValueLabel.setText(averageTime.toString());
             worstLinearTimeValue.setText(worstTime.toString());
-        }
-        else{
+        } else {
             bestBinaryTimeValueLabel.setText(bestTime.toString());
             averageBinaryTimeValueLabel.setText(averageTime.toString());
             worstBinaryTimeValue.setText(worstTime.toString());
