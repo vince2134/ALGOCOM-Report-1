@@ -37,7 +37,12 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(null, inputSizeComboBox.getSelectedItem().toString());
-                run();
+                try {
+                    run();
+                }
+                catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, "Invalid input found.");
+                }
             }
         });
     }
